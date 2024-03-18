@@ -31,7 +31,7 @@ const TasksPage = async ({
                   <td>{task.id}</td>
                   <td>
                     <Link
-                      className="link link-primary"
+                      className="text-violet-600 hover:underline font-semibold"
                       href={`/tasks/${task.id}`}
                     >
                       {task.task}

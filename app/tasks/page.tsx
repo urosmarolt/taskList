@@ -6,10 +6,10 @@ import SearchField from "./SearchField";
 import { Task } from "@prisma/client";
 
 interface Props {
-  searchParams: { searchQuery: string };
+  searchParams: { searchQuery: string; orderBy: keyof Task };
 }
 
-const TasksPage = async ({ searchParams: { searchQuery } }: Props) => {
+const TasksPage = async ({ searchParams: { searchQuery, orderBy } }: Props) => {
   const columns: { label: string; value: keyof Task }[] = [
     { label: "ID", value: "id" },
     { label: "Task", value: "task" },
@@ -17,12 +17,15 @@ const TasksPage = async ({ searchParams: { searchQuery } }: Props) => {
     { label: "Status", value: "status" },
   ];
 
-  let tasks = null;
-  if (searchQuery)
-    tasks = await prisma.task.findMany({
-      where: { task: { contains: searchQuery } },
-    });
-  else tasks = await prisma.task.findMany();
+  const search = searchQuery ? searchQuery : undefined;
+  const order = columns.map((column) => column.value).includes(orderBy)
+    ? { [orderBy]: "asc" }
+    : undefined;
+
+  const tasks = await prisma.task.findMany({
+    where: { task: { contains: search } },
+    orderBy: order,
+  });
 
   return (
     <div>
@@ -38,7 +41,30 @@ const TasksPage = async ({ searchParams: { searchQuery } }: Props) => {
               {columns.map((column) => {
                 return (
                   <th key={column.label}>
-                    <Link href="">{column.label}</Link>
+                    <Link
+                      href={{
+                        query: { searchQuery, orderBy: column.value },
+                      }}
+                      className="text-black hover:underline font-semi-bold"
+                    >
+                      {column.label}
+                    </Link>
+                    {column.value === orderBy && (
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        strokeWidth={1.5}
+                        stroke="currentColor"
+                        className="w-4 h-4 inline"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M4.5 10.5 12 3m0 0 7.5 7.5M12 3v18"
+                        />
+                      </svg>
+                    )}
                   </th>
                 );
               })}

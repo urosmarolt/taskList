@@ -1,8 +1,9 @@
 import CloseTaskButton from "@/app/components/CloseTaskButton";
+import DeleteTaskButton from "@/app/components/DeleteTaskButton";
+import EditTaskButton from "@/app/components/EditTaskButton";
 import StatusBadge from "@/app/components/StatusBadge";
 import prisma from "@/prisma/client";
 import { notFound } from "next/navigation";
-import React from "react";
 
 const TaskDetailPage = async ({
   params: { id },
@@ -22,22 +23,12 @@ const TaskDetailPage = async ({
         <StatusBadge status={task?.status} />
         <p className="text-sm mb-5">{task?.createdAt.toLocaleString()}</p>
         <div className="card-actions justify-end">
-          {task?.status === "OPEN" && <CloseTaskButton taskId={parseInt(id)} />}
-          <button className="btn btn-error btn-outline btn-xs">Delete</button>
+          {task?.status === "OPEN" && <CloseTaskButton task={task} />}
+          <EditTaskButton taskId={parseInt(id)} />
+          <DeleteTaskButton taskId={parseInt(id)} />
         </div>
       </div>
     </div>
-    /* <div>
-      <h1 className="font-extrabold">{task?.task}</h1>
-      <StatusBadge status={task?.status} />
-      <p className="text-sm mb-5">{task?.createdAt.toLocaleString()}</p>
-      {task?.status === "OPEN" && (
-        <button className="btn btn-primary btn-outline btn-xs  mr-3">
-          Close task
-        </button>
-      )}
-      <button className="btn btn-error btn-outline btn-xs">Delete</button>
-    </div> */
   );
 };
 

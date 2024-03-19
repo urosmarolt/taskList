@@ -20,6 +20,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   const body = await request.json();
+
   const validation = statusSchema.safeParse(body);
 
   if (!validation.success)
@@ -34,7 +35,7 @@ export async function PATCH(
 
   const updatedTask = await prisma.task.update({
     where: { id: task.id },
-    data: { status: body.status },
+    data: { status: body.status, task: body.task },
   });
   return NextResponse.json(updatedTask);
 }

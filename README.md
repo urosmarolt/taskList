@@ -18,4 +18,4 @@ Start docker
  docker-compose -f compose/docker-compose.yml up -d
 ```
 
-Open [http://localhost:3030](http://localhost:3030) with your browser to see the result.
+Open [http://localhost:3030/tasks](http://localhost:3030/tasks) with your browser to see the result.
